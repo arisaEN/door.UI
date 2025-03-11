@@ -42,8 +42,6 @@ namespace door.Infrastructure.SQLite
                     dt.Date,
                     dt.Time,
                     dt.DoorStatusName
-                    //Amount = ed.Amount ?? 0, // Nullable int を int に変換
-                    //InputTime = ed.InputTime.HasValue ? ed.InputTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : null // Nullable DateTime を string に変換
                 })
                 .ToListAsync();
 

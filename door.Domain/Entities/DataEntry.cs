@@ -3,15 +3,22 @@ using System.Collections.Generic;
 
 namespace door.Domain.Entities;
 
-public partial class DataEntry
+public class DataEntry
 {
-    public int Id { get; set; }
+    public int Id { get; private set; }
+    public string Date { get; private set; }
+    public string Time { get; private set; }
+    public int DoorStatusId { get; private set; }
+    public MasterDoorStatus DoorStatus { get; private set; } // ナビゲーションプロパティ
 
-    public string Date { get; set; } = null!;
+    private DataEntry() { }
 
-    public string Time { get; set; } = null!;
-
-    public int DoorStatusId { get; set; }
-
-    public virtual MasterDoorStatus DoorStatus { get; set; } = null!;
+    public DataEntry(int id, string date, string time, int doorStatusId) // , MasterDoorStatus doorStatus
+    {
+        Id = id;
+        Date = date;
+        Time = time;
+        DoorStatusId = doorStatusId;
+        //DoorStatus = doorStatus;
+    }
 }
