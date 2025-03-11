@@ -1,0 +1,43 @@
+Entityを置く場所まで移動
+
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+
+dotnet ef dbcontext scaffold "Data Source=C:\dev\door.UI\door.UI\door.db" Microsoft.EntityFrameworkCore.Sqlite --output-dir Entities --context DoorDbContext --force
+
+
+
+
+実装内容
+
+
+インフラ
+ＤＢから全件取得
+リターンでリスト返す
+（かじあぷ参照）
+
+
+
+
+ＵＩにＤＴＯ作成
+
+
+
+webhookにＤＴＯが存在するか
+
+
+
+
+
+
+
+ＵＩ
+インフラ関数呼ぶ
+リストを表示
+
+
+
+
+Entityを完全コンストラクタ化させる
+
