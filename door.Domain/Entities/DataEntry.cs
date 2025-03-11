@@ -11,5 +11,7 @@ public partial class DataEntry
 
     public string Time { get; set; } = null!;
 
-    public string Status { get; set; } = null!;
+    public int DoorStatusId { get; set; }
+
+    public virtual MasterDoorStatus DoorStatus { get; set; } = null!;
 }

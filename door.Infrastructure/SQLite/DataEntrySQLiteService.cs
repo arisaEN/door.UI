@@ -7,43 +7,56 @@ using System.Threading.Tasks;
 using door.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using door.Infrastructure;
+using door.Infrastructure.DTO;
 
 namespace door.Infrastructure.SQLite
 {
 
-    class DataEntrySQLiteService
+    public class DataEntrySQLiteService
     {
         private readonly DoorDbContext _context;
         public DataEntrySQLiteService(DoorDbContext context)
         {
             _context = context;
         }
-        public async Task<List<DataEntry>> GetDataEntryAsync()
+        public async Task<List<DataEntryDTO>> GetDataEntryAsync()
         {
             // ① Entity を取得
             var dt = await _context.DataEntries
+                .Join(
+                    _context.MasterDoorStatuses,
+                    dt => dt.DoorStatusId,  // `DataEntry` の結合キー
+                    status => status.Id,        // `MasterDoorStatus` の結合キー
+                    (data, status) => new   
+                    {
+                        data.Id,
+                        data.Date,
+                        data.Time,
+                        status.DoorStatusName
+                    }
+                )
                 .OrderByDescending(dt => dt.Id)
                 .Select(dt => new
                 {
                     dt.Id,
                     dt.Date,
                     dt.Time,
-                    dt.Status
+                    dt.DoorStatusName
                     //Amount = ed.Amount ?? 0, // Nullable int を int に変換
                     //InputTime = ed.InputTime.HasValue ? ed.InputTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : null // Nullable DateTime を string に変換
                 })
                 .ToListAsync();
 
             // ② DTO に変換 //今DTO無いので　EntityからEntityに変換謎の処理になっている。
-            var dataEntry = dt.Select(dt => new DataEntry
+            var dataEntryDTO = dt.Select(dt => new DataEntryDTO
             {
                 Id = dt.Id,
                 Date = dt.Date,
                 Time = dt.Time,
-                Status = dt.Status
+                StatusName = dt.DoorStatusName
             }).ToList();
 
-            return dataEntry; // DTO を返す
+            return dataEntryDTO; // DTO を返す
         }
     }
 }

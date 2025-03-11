@@ -1,9 +1,13 @@
 using door.UI.Components;
-
+using Microsoft.EntityFrameworkCore;
 
 
 //プロジェクト参照
 using door.Infrastructure.SQLite;
+using door.Domain.Entities;
+using door.Infrastructure;
+//using Blazored.Toast;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDbContext<DoorDbContext>();
+
 
 var app = builder.Build();
 
