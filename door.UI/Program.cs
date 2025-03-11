@@ -3,7 +3,7 @@ using door.UI.Components;
 
 
 //プロジェクト参照
-using door.Domain.SQlite;
+using door.Infrastructure.SQLite;
 
 
 var builder = WebApplication.CreateBuilder(args);
