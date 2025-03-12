@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "door.Domain", "door.Domain\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "door.Infrastructure", "door.Infrastructure\door.Infrastructure.csproj", "{770842EE-0DC4-4F84-AEF9-650040F8AD56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "door.app", "door.app\door.app.csproj", "{547CA217-40E1-44EB-BA53-5DFA7D94A646}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{770842EE-0DC4-4F84-AEF9-650040F8AD56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{770842EE-0DC4-4F84-AEF9-650040F8AD56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{770842EE-0DC4-4F84-AEF9-650040F8AD56}.Release|Any CPU.Build.0 = Release|Any CPU
-		{547CA217-40E1-44EB-BA53-5DFA7D94A646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{547CA217-40E1-44EB-BA53-5DFA7D94A646}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{547CA217-40E1-44EB-BA53-5DFA7D94A646}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{547CA217-40E1-44EB-BA53-5DFA7D94A646}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
