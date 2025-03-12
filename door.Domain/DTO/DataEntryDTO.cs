@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace door.Infrastructure.DTO
+namespace door.Domain.DTO
 {
     public class DataEntryDTO
     {
@@ -16,5 +16,13 @@ namespace door.Infrastructure.DTO
         public string Time { get; set; } = null!;
         [Display(Name = "名前")]
         public string StatusName { get; set; } = null!;
+    }
+    
+    //APIリクエストデータの型定義
+    public class DataEntryRequestDto
+    {
+        public string Date { get; set; } = string.Empty;
+        public string Time { get; set; } = string.Empty;
+        public int DoorStatusId { get; set; }
     }
 }

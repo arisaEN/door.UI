@@ -1,0 +1,12 @@
+URL
+http://localhost:5255/door/insert
+
+Headers
+Content-Type　　application/json
+
+Body
+{
+  "Date": "2025-03-12",
+  "Time": "14:30",
+  "DoorStatusId": 1
+}

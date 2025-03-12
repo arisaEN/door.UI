@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 using door.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using door.Infrastructure;
-using door.Infrastructure.DTO;
+using door.Domain.DTO;
+
 
 namespace door.Infrastructure.SQLite
 {
 
     public class DataEntrySQLiteService
     {
+        private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly DoorDbContext _context;
         public DataEntrySQLiteService(DoorDbContext context)
         {
@@ -21,6 +23,8 @@ namespace door.Infrastructure.SQLite
         }
         public async Task<List<DataEntryDTO>> GetDataEntryAsync()
         {
+
+            _logger.Info("DataEntryDTOデータ取得開始");
             // ① Entity を取得
             var dt = await _context.DataEntries
                 .Join(
@@ -55,6 +59,18 @@ namespace door.Infrastructure.SQLite
             }).ToList();
 
             return dataEntryDTO; // DTO を返す
+        }
+        public async Task DataEntryInsertAsync(DataEntryRequestDto request)
+        {
+            var newEntry = new DataEntry(
+                //id: 0, // EF Coreが自動設定するので適当な値（0）を入れる
+                date: request.Date,
+                time: request.Time,
+                doorStatusId: request.DoorStatusId
+            );
+
+            _context.DataEntries.Add(newEntry);
+            await _context.SaveChangesAsync();
         }
     }
 }

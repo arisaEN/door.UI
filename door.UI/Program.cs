@@ -1,14 +1,13 @@
 using door.UI.Components;
 using Microsoft.EntityFrameworkCore;
 
-
-//プロジェクト参照
+// プロジェクト参照
 using door.Infrastructure.SQLite;
 using door.Domain.Entities;
 using door.Infrastructure;
-//using Blazored.Toast;
-
-
+using door.Domain.Repositories;
+using door.Infrastructure.Services;
+// using Blazored.Toast;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +15,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Add DbContext and services
 builder.Services.AddDbContext<DoorDbContext>();
+builder.Services.AddScoped<IDataEntryService, DataEntryService>();
 
+builder.Services.AddSignalR();
+
+// SQLite の接続文字列を appsettings.json から取得する
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// DbContext を DI に登録
+builder.Services.AddDbContext<DoorDbContext>(options =>
+    options.UseSqlite(connectionString));
+
+// Add HttpClient for API calls (if needed)
+builder.Services.AddHttpClient();
+
+// Add controllers for API routes
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -30,11 +45,21 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
+
+// Use routing before antiforgery
+app.UseRouting();
+
+// Antiforgery token validation should be applied after routing
 app.UseAntiforgery();
 
+// Map API controllers
+app.MapControllers(); // Add this to map API routes
+
+// Map Razor components (Blazor Server)
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+
 
 app.Run();

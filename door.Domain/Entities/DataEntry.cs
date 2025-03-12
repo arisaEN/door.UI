@@ -13,9 +13,9 @@ public class DataEntry
 
     private DataEntry() { }
 
-    public DataEntry(int id, string date, string time, int doorStatusId) // , MasterDoorStatus doorStatus
+    public DataEntry(string date, string time, int doorStatusId) //int id, // , MasterDoorStatus doorStatus
     {
-        Id = id;
+        //Id = id;
         Date = date;
         Time = time;
         DoorStatusId = doorStatusId;
