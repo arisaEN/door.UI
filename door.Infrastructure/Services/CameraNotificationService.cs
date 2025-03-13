@@ -33,12 +33,13 @@ namespace door.Infrastructure.Services
         /// <returns></returns>
         public async Task DataEntryInsert(DataEntryRequestDto request)
         {
+            //挿入処理 SQLiteに処理はまかせる
             DataEntrySQLiteService dataEntrySQLiteService = new DataEntrySQLiteService(_context);
             await dataEntrySQLiteService.DataEntryInsertAsync(request);
         }
 
         /// <summary>
-        /// discord通知 
+        /// discord通知 discord通知を担当
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>

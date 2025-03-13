@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using door.Infrastructure;
 using System.Text;
-
+using door.Infrastructure.Services;
+using Microsoft.Extensions.Configuration;
 
 
 //エンドポイントを提供する
@@ -19,14 +20,15 @@ namespace door.UI.Controllers
     
     public class DoorController : ControllerBase
     {
-        private readonly ICameraNotification _cameraNotification;
+      
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly DoorDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public DoorController(DoorDbContext context,ICameraNotification cameraNotification)
+        public DoorController(DoorDbContext context)
         {
             _context = context;
-            _cameraNotification = cameraNotification;
+  
         }
         /// <summary>
         /// DB挿入処理
@@ -34,25 +36,27 @@ namespace door.UI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("insert")]
-        public async Task<IActionResult> InsertDataEntry([FromBody] DataEntryRequestDto request)
+        public async Task<IActionResult> ReqInsertEndpoint([FromBody] DataEntryRequestDto request)
         {
             _logger.Info("リクエスト来ました");
             if (request == null)
                 return BadRequest("Invalid request");
-            
+            //CameraNotificationService層の処理を呼ぶ
             // データをDBに挿入
-            await _cameraNotification.DataEntryInsert(request);
+            CameraNotificationService _cameraNotificationService = new CameraNotificationService(_context, _configuration);
+            await _cameraNotificationService.DataEntryInsert(request);
 
             return Ok(new { message = "Data entry inserted successfully" });
         }
         /// <summary>
-        /// Discord通知
+        /// Discord通知 通知前データ整形など準備を担当
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("notification")]
-        public async Task<IActionResult> SendNotification([FromBody] DataEntryRequestDto request)
+        public async Task<IActionResult> ReqDiscordNotification([FromBody] DataEntryRequestDto request)
         {
+            //CameraNotificationService層の処理を呼ぶ
             if (request == null)
                 return BadRequest("Invalid request");
 
@@ -63,7 +67,7 @@ namespace door.UI.Controllers
             if (dataEntryList == null || !dataEntryList.Any())
                 return NotFound("No matching data found");
 
-            // DTOリストをDiscord通知用に整形
+            // データ編加算されたリストDTOをDiscord通知用に整形
             var message = new StringBuilder();
             message.AppendLine("🔔 [テスト通知だお]");
             foreach (var entry in dataEntryList)
@@ -72,7 +76,8 @@ namespace door.UI.Controllers
             }
 
             // Discord通知を実行
-            await _cameraNotification.NotificationStateChange(message.ToString());
+            CameraNotificationService _cameraNotificationService = new CameraNotificationService(_context, _configuration);
+            await _cameraNotificationService.NotificationStateChange(message.ToString());
 
             return Ok(new { message = "Notification sent successfully" });
         }
