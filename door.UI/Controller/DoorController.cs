@@ -3,6 +3,12 @@ using System.Threading.Tasks;
 using door.Domain.DTO;
 using door.Domain.Repositories;
 using System;
+using door.Infrastructure.SQLite;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using door.Infrastructure;
+using System.Text;
+
 
 
 //エンドポイントを提供する
@@ -15,9 +21,11 @@ namespace door.UI.Controllers
     {
         private readonly IDataEntryService _dataEntryService;
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly DoorDbContext _context;
 
-        public DoorController(IDataEntryService dataEntryService)
+        public DoorController(DoorDbContext context,IDataEntryService dataEntryService)
         {
+            _context = context;
             _dataEntryService = dataEntryService;
         }
 
@@ -40,8 +48,23 @@ namespace door.UI.Controllers
             if (request == null)
                 return BadRequest("Invalid request");
 
+            // データ変換
+            DataEntrySQLiteService dataEntrySQLiteService = new DataEntrySQLiteService(_context);
+            var dataEntryList = await dataEntrySQLiteService.DataEntryReqTempJointAsync(request);
+
+            if (dataEntryList == null || !dataEntryList.Any())
+                return NotFound("No matching data found");
+
+            // DTOリストをDiscord通知用に整形
+            var message = new StringBuilder();
+            message.AppendLine("🔔 [テスト通知だお]");
+            foreach (var entry in dataEntryList)
+            {
+                message.AppendLine($"📅 日付: {entry.Date} 🕒 時間: {entry.Time} 🏷 状態: {entry.StatusName}");
+            }
+
             // Discord通知を実行
-            await _dataEntryService.NotificationStateChange($"[通知] {request.Date} {request.Time} 状態: {request.DoorStatusId}");
+            await _dataEntryService.NotificationStateChange(message.ToString());
 
             return Ok(new { message = "Notification sent successfully" });
         }

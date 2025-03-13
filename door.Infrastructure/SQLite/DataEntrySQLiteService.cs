@@ -23,7 +23,6 @@ namespace door.Infrastructure.SQLite
         }
         public async Task<List<DataEntryDTO>> GetDataEntryAsync()
         {
-
             _logger.Info("DataEntryDTOデータ取得開始");
             // ① Entity を取得
             var dt = await _context.DataEntries
@@ -60,6 +59,11 @@ namespace door.Infrastructure.SQLite
 
             return dataEntryDTO; // DTO を返す
         }
+        /// <summary>
+        /// APIリクエストからDBインサート
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task DataEntryInsertAsync(DataEntryRequestDto request)
         {
             var newEntry = new DataEntry(
@@ -71,6 +75,39 @@ namespace door.Infrastructure.SQLite
 
             _context.DataEntries.Add(newEntry);
             await _context.SaveChangesAsync();
+        }
+
+
+        /////////////////未完成↓
+
+
+        /// <summary>
+        /// discordAPIリクエストからRDS内でテーブル結合し、結果を返す
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<List<DataEntryDTO>> DataEntryReqTempJointAsync(DataEntryRequestDto request)
+        {
+
+            //現状reqと同じデータを明細から出力して、それとマスタを結合して渡している。　
+            var dataEntryDTOs = await _context.DataEntries
+                .Where(de => de.Date == request.Date && de.Time == request.Time && de.DoorStatusId == request.DoorStatusId)
+                .Join(
+                    _context.MasterDoorStatuses,
+                    de => de.DoorStatusId,
+                    status => status.Id,
+                    (de, status) => new DataEntryDTO
+                    {
+                        Id = de.Id,
+                        Date = de.Date,
+                        Time = de.Time,
+                        StatusName = status.DoorStatusName
+                    }
+                )
+                .OrderByDescending(de => de.Id)
+                .ToListAsync();
+
+            return dataEntryDTOs;
         }
     }
 }
