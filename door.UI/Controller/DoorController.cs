@@ -19,16 +19,20 @@ namespace door.UI.Controllers
     
     public class DoorController : ControllerBase
     {
-        private readonly IDataEntryService _dataEntryService;
+        private readonly ICameraNotification _cameraNotification;
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly DoorDbContext _context;
 
-        public DoorController(DoorDbContext context,IDataEntryService dataEntryService)
+        public DoorController(DoorDbContext context,ICameraNotification cameraNotification)
         {
             _context = context;
-            _dataEntryService = dataEntryService;
+            _cameraNotification = cameraNotification;
         }
-
+        /// <summary>
+        /// DB挿入処理
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("insert")]
         public async Task<IActionResult> InsertDataEntry([FromBody] DataEntryRequestDto request)
         {
@@ -37,11 +41,15 @@ namespace door.UI.Controllers
                 return BadRequest("Invalid request");
             
             // データをDBに挿入
-            await _dataEntryService.DataEntryInsert(request);
+            await _cameraNotification.DataEntryInsert(request);
 
             return Ok(new { message = "Data entry inserted successfully" });
         }
-
+        /// <summary>
+        /// Discord通知
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("notification")]
         public async Task<IActionResult> SendNotification([FromBody] DataEntryRequestDto request)
         {
@@ -64,7 +72,7 @@ namespace door.UI.Controllers
             }
 
             // Discord通知を実行
-            await _dataEntryService.NotificationStateChange(message.ToString());
+            await _cameraNotification.NotificationStateChange(message.ToString());
 
             return Ok(new { message = "Notification sent successfully" });
         }

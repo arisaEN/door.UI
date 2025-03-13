@@ -9,7 +9,8 @@ using door.Domain.DTO;
 
 namespace door.Domain.Repositories
 {
-    public interface IDataEntryService
+
+    public interface ICameraNotification
     {
         Task DataEntryInsert(DataEntryRequestDto request);
         Task NotificationStateChange(string message);

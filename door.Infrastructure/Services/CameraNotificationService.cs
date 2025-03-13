@@ -14,20 +14,20 @@ using door.Infrastructure.SQLite;
 
 namespace door.Infrastructure.Services
 {
-    public class DataEntryService : IDataEntryService
+    public class CameraNotificationService : ICameraNotification
     {
         private readonly DoorDbContext _context;
         private readonly HttpClient _httpClient;
         private readonly string _webhookUrl;
 
-        public DataEntryService(DoorDbContext context, IConfiguration configuration)
+        public CameraNotificationService(DoorDbContext context, IConfiguration configuration)
         {
             _context = context;
             _httpClient = new HttpClient();
             _webhookUrl = configuration["Discord:WebhookUrl"]; // `appsettings.json` から取得
         }
         /// <summary>
-        /// 公開API DB挿入用
+        /// DB挿入用
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -38,7 +38,7 @@ namespace door.Infrastructure.Services
         }
 
         /// <summary>
-        /// 公開API discord通知 
+        /// discord通知 
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
