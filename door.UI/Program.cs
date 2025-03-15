@@ -7,6 +7,7 @@ using door.Domain.Entities;
 using door.Infrastructure;
 using door.Domain.Repositories;
 using door.Infrastructure.Services;
+using door.Domain.Events;
 // using Blazored.Toast;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,11 +18,14 @@ builder.Services.AddRazorComponents()
 
 // Add DbContext and services
 builder.Services.AddDbContext<DoorDbContext>();
-//builder.Services.AddScoped<ICameraNotification, CameraNotificationService>();
-//builder.Services.AddSingleton<IDiscordNotificationService, DiscordNotificationService>();
-builder.Services.AddScoped<IDiscordNotificationService, DiscordNotificationService>();
+builder.Services.AddScoped<DataEntrySQLiteService>();
+builder.Services.AddSingleton<IDiscordNotificationService, DiscordNotificationService>();
+//builder.Services.AddSingleton<DiscordNotificationService>();
+
 builder.Services.AddSingleton<DiscordNotificationService>();
-builder.Services.AddSingleton<DataEntrySQLiteService>();
+//ƒAƒvƒŠI—¹‚Ü‚Åó‘Ô‚ğˆÛ
+//builder.Services.AddSingleton<StateChangedEvent>();
+
 
 
 builder.Services.AddSignalR();

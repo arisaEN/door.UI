@@ -19,6 +19,7 @@ namespace door.Infrastructure.Services
     {
         private readonly HttpClient _httpClient;
         private readonly string _webhookUrl;
+        public event Action? OnDoorStateChanged; // UI更新用イベント
 
         public DiscordNotificationService(IConfiguration configuration)
         {
@@ -33,11 +34,14 @@ namespace door.Infrastructure.Services
         /// </summary>
         /// <param name="stateMessage"></param>
         /// <returns></returns>
-        public async Task HandleDoorStateChange(string stateMessage)
-        {
-            var domainEvent = new StateChangedEvent(stateMessage);
-            await NotificationStateChange(domainEvent);
-        }
+        //public async Task HandleDoorStateChange(string stateMessage)
+        //{
+        //    var domainEvent = new StateChangedEvent(stateMessage);
+        //    await NotificationStateChange(domainEvent);
+
+        //    // UIに通知
+        //    OnDoorStateChanged?.Invoke();
+        //}
 
 
         /// <summary>
@@ -46,18 +50,21 @@ namespace door.Infrastructure.Services
         /// <param name="message"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task NotificationStateChange(StateChangedEvent domainEvent)
+        public async Task NotificationStateChange(string stateMessage)
         {
             if (string.IsNullOrEmpty(_webhookUrl))
             {
                 throw new Exception("Webhook URL is not configured.");
             }
 
-            var payload = new { content = domainEvent.Message };
+            var payload = new { content = stateMessage };
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(_webhookUrl, content);
+
+            // UIに通知
+            OnDoorStateChanged?.Invoke();
 
             if (!response.IsSuccessStatusCode)
             {

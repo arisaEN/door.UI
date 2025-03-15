@@ -3,9 +3,12 @@
 @using System.ComponentModel.DataAnnotations
 @using door.Domain.DTO
 @using door.Infrastructure
+@using door.Infrastructure.Services
 @using door.Infrastructure.SQLite
 @inject DoorDbContext DbContext
+@inject DiscordNotificationService NotificationService
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
+
 
 
 <h3>データエントリー一覧</h3>
@@ -45,10 +48,35 @@ else
 
 @code {
     private List<DataEntryDTO>? dataEntries;
+    private DataEntrySQLiteService? dataEntryService;
 
     protected override async Task OnInitializedAsync()
     {
-        DataEntrySQLiteService dataEntryService = new DataEntrySQLiteService(DbContext);
+        dataEntryService = new DataEntrySQLiteService(DbContext);
         dataEntries = await dataEntryService.GetDataEntryAsync();
+
+        if (NotificationService != null)
+        {
+            NotificationService.OnDoorStateChanged += async () =>
+            {
+                await UpdateDataEntries();
+                await InvokeAsync(StateHasChanged); // UIスレッドで実行
+            };
+        }
+    }
+
+    private async Task UpdateDataEntries()
+    {
+        if (dataEntryService != null)
+        {
+            DataEntrySQLiteService dataEntryService = new DataEntrySQLiteService(DbContext);
+            dataEntries = await dataEntryService.GetDataEntryAsync();
+        }
+    }
+
+    public void Dispose()
+    {
+        // イベント購読を解除
+        NotificationService.OnDoorStateChanged -= async () => await UpdateDataEntries();
     }
 }

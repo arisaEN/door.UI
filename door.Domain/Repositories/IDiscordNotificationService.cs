@@ -18,13 +18,13 @@ namespace door.Domain.Repositories
         /// </summary>
         /// <param name="domainEvent"></param>
         /// <returns></returns>
-        Task HandleDoorStateChange(string stateMessage);
+        //Task HandleDoorStateChange(string stateMessage);
         /// <summary>
         /// discord通知
         /// /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task NotificationStateChange(StateChangedEvent domainEvent);
+        Task NotificationStateChange(string stateMessage);
         
 
     }

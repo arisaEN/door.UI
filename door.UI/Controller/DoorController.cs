@@ -28,13 +28,19 @@ namespace door.UI.Controllers
 
 
 
-        public DoorController(DoorDbContext context, DiscordNotificationService discordNotificationService, DataEntrySQLiteService dataEntrySQLiteService)
-        {
-            _context = context;
-            _discordNotificationService = discordNotificationService;
-            _dataEntrySQLiteService = dataEntrySQLiteService;
+        //public DoorController(DoorDbContext context, DiscordNotificationService discordNotificationService, DataEntrySQLiteService dataEntrySQLiteService)
+        //{
+        //    _context = context;
+        //    _discordNotificationService = discordNotificationService;
+        //    _dataEntrySQLiteService = dataEntrySQLiteService;
+        //}
 
+        public DoorController(DataEntrySQLiteService dataEntrySQLiteService, DiscordNotificationService discordNotificationService)
+        {
+            _dataEntrySQLiteService = dataEntrySQLiteService;
+            _discordNotificationService = discordNotificationService;
         }
+
         /// <summary>
         /// DB挿入処理
         /// </summary>
@@ -66,8 +72,8 @@ namespace door.UI.Controllers
                 return BadRequest("Invalid request");
 
             // データ変換
-            DataEntrySQLiteService dataEntrySQLiteService = new DataEntrySQLiteService(_context);
-            var dataEntryList = await dataEntrySQLiteService.DataEntryReqTempJointAsync(request);
+            //DataEntrySQLiteService dataEntrySQLiteService = new DataEntrySQLiteService(_context);
+            var dataEntryList = await _dataEntrySQLiteService.DataEntryReqTempJointAsync(request);
 
             if (dataEntryList == null || !dataEntryList.Any())
                 return NotFound("No matching data found");
@@ -81,8 +87,9 @@ namespace door.UI.Controllers
             }
 
             // Discord通知を実行            
-            await _discordNotificationService.HandleDoorStateChange(message.ToString());
-
+            //await _discordNotificationService.HandleDoorStateChange(message.ToString());
+            await _discordNotificationService.NotificationStateChange(message.ToString());
+            
             return Ok(new { message = "Notification sent successfully" });
         }
     }
