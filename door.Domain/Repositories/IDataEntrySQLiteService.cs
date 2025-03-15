@@ -15,7 +15,7 @@ namespace door.Domain.Repositories
         /// </summary>
         /// <returns></returns>
         /// 
-        Task GetDataEntryAsync();
+        Task<List<DataEntryDTO>> GetDataEntryAsync();
         /// <summary>
         /// door.msからデータ挿入用
         /// </summary>
@@ -23,10 +23,10 @@ namespace door.Domain.Repositories
         /// <returns></returns>
         Task DataEntryInsertAsync(DataEntryRequestDto request);
         /// <summary>
-        /// discordからデータ挿入用
+        /// discord通知用のデータ整形
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task DataEntryReqTempJointAsync(DataEntryRequestDto request);
+        Task<List<DataEntryDTO>> DataEntryReqTempJointAsync(DataEntryRequestDto request);
     }
 }

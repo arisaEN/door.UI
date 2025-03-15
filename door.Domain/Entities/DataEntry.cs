@@ -21,4 +21,10 @@ public class DataEntry
         DoorStatusId = doorStatusId;
         //DoorStatus = doorStatus;
     }
+
+    // ✅ テスト用のファクトリメソッド
+    public static DataEntry CreateForTest(int id, string date, string time, int doorStatusId)
+    {
+        return new DataEntry(date, time, doorStatusId) { Id = id };
+    }
 }

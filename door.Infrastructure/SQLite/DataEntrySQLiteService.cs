@@ -8,12 +8,13 @@ using door.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using door.Infrastructure;
 using door.Domain.DTO;
+using door.Domain.Repositories;
 
 
 namespace door.Infrastructure.SQLite
 {
 
-    public class DataEntrySQLiteService
+    public class DataEntrySQLiteService: IDataEntrySQLiteService
     {
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly DoorDbContext _context;

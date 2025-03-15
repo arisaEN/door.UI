@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using door.Infrastructure.SQLite;
 
+
 namespace door.Infrastructure.Services
 {
     public class DiscordNotificationService : IDiscordNotificationService
@@ -27,20 +28,6 @@ namespace door.Infrastructure.Services
             _webhookUrl = configuration["Discord:WebhookUrl"] ?? throw new InvalidOperationException("Webhook URL is not set.");
 
         }
-
-        /// <summary>
-        /// ドアの状態が変わったときに NotificationStateChange を呼び出す
-        /// </summary>
-        /// <param name="stateMessage"></param>
-        /// <returns></returns>
-        //public async Task HandleDoorStateChange(string stateMessage)
-        //{
-        //    var domainEvent = new StateChangedEvent(stateMessage);
-        //    await NotificationStateChange(domainEvent);
-
-        //    // UIに通知
-        //    OnDoorStateChanged?.Invoke();
-        //}
 
 
         /// <summary>

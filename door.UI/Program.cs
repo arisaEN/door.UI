@@ -23,6 +23,7 @@ builder.Services.AddSingleton<IDiscordNotificationService, DiscordNotificationSe
 //builder.Services.AddSingleton<DiscordNotificationService>();
 
 builder.Services.AddSingleton<DiscordNotificationService>();
+
 //ƒAƒvƒŠI—¹‚Ü‚Åó‘Ô‚ğˆÛ
 //builder.Services.AddSingleton<StateChangedEvent>();
 
