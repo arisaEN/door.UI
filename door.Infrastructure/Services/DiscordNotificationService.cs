@@ -11,32 +11,34 @@ using door.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using door.Infrastructure.SQLite;
+using door.Domain.Events;
 
 namespace door.Infrastructure.Services
 {
-    public class CameraNotificationService
+    public class DiscordNotificationService : IDiscordNotificationService
     {
-        private readonly DoorDbContext _context;
         private readonly HttpClient _httpClient;
         private readonly string _webhookUrl;
 
-        public CameraNotificationService(DoorDbContext context)
+        public DiscordNotificationService(IConfiguration configuration)
         {
-            _context = context;
             _httpClient = new HttpClient();
-          
+            //program.csからurlを取得
+            _webhookUrl = configuration["Discord:WebhookUrl"] ?? throw new InvalidOperationException("Webhook URL is not set.");
+
         }
+
         /// <summary>
-        /// DB挿入用
+        /// ドアの状態が変わったときに NotificationStateChange を呼び出す
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="stateMessage"></param>
         /// <returns></returns>
-        //public async Task DataEntryInsert(DataEntryRequestDto request)
-        //{
-        //    //挿入処理 SQLiteに処理はまかせる
-        //    DataEntrySQLiteService dataEntrySQLiteService = new DataEntrySQLiteService(_context);
-        //    await dataEntrySQLiteService.DataEntryInsertAsync(request);
-        //}
+        public async Task HandleDoorStateChange(string stateMessage)
+        {
+            var domainEvent = new StateChangedEvent(stateMessage);
+            await NotificationStateChange(domainEvent);
+        }
+
 
         /// <summary>
         /// 受け取ったメッセージをdiscord通知 
@@ -44,14 +46,14 @@ namespace door.Infrastructure.Services
         /// <param name="message"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task NotificationStateChange(string message)
+        public async Task NotificationStateChange(StateChangedEvent domainEvent)
         {
             if (string.IsNullOrEmpty(_webhookUrl))
             {
                 throw new Exception("Webhook URL is not configured.");
             }
 
-            var payload = new { content = message };
+            var payload = new { content = domainEvent.Message };
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -62,5 +64,10 @@ namespace door.Infrastructure.Services
                 throw new Exception($"Failed to send Discord notification: {response.StatusCode}");
             }
         }
+
+
+
+
     }
+
 }

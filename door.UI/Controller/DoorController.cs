@@ -23,12 +23,14 @@ namespace door.UI.Controllers
       
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly DoorDbContext _context;
-       
+        private readonly DiscordNotificationService _cameraNotificationService;
 
-        public DoorController(DoorDbContext context)
+
+
+        public DoorController(DoorDbContext context, DiscordNotificationService cameraNotificationService)
         {
             _context = context;
-  
+            _cameraNotificationService = cameraNotificationService;
         }
         /// <summary>
         /// DB挿入処理
@@ -75,9 +77,8 @@ namespace door.UI.Controllers
                 message.AppendLine($"📅 日付: {entry.Date} 🕒 時間: {entry.Time} 🏷 状態: {entry.StatusName}");
             }
 
-            // Discord通知を実行
-            CameraNotificationService _cameraNotificationService = new CameraNotificationService(_context);
-            await _cameraNotificationService.NotificationStateChange(message.ToString());
+            // Discord通知を実行            
+            await _cameraNotificationService.HandleDoorStateChange(message.ToString());
 
             return Ok(new { message = "Notification sent successfully" });
         }

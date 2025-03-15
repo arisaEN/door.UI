@@ -18,6 +18,10 @@ builder.Services.AddRazorComponents()
 // Add DbContext and services
 builder.Services.AddDbContext<DoorDbContext>();
 //builder.Services.AddScoped<ICameraNotification, CameraNotificationService>();
+//builder.Services.AddSingleton<IDiscordNotificationService, DiscordNotificationService>();
+builder.Services.AddScoped<IDiscordNotificationService, DiscordNotificationService>();
+builder.Services.AddSingleton<DiscordNotificationService>();
+
 
 builder.Services.AddSignalR();
 
