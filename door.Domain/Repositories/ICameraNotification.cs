@@ -12,7 +12,12 @@ namespace door.Domain.Repositories
 
     public interface ICameraNotification
     {
-        Task DataEntryInsert(DataEntryRequestDto request);
+        /// <summary>
+        /// discord通知
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         Task NotificationStateChange(string message);
     }
 }

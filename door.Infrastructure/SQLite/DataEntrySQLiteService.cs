@@ -60,7 +60,7 @@ namespace door.Infrastructure.SQLite
             return dataEntryDTO; // DTO を返す
         }
         /// <summary>
-        /// APIリクエストからDBインサート
+        /// APIリクエストからDBインサート (カメラからdiscord通知用)
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -76,7 +76,6 @@ namespace door.Infrastructure.SQLite
             _context.DataEntries.Add(newEntry);
             await _context.SaveChangesAsync();
         }
-
 
         /////////////////未完成↓
 
@@ -109,6 +108,8 @@ namespace door.Infrastructure.SQLite
 
             return dataEntryDTOs;
         }
+
+
     }
 }
 

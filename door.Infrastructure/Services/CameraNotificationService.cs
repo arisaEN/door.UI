@@ -14,32 +14,32 @@ using door.Infrastructure.SQLite;
 
 namespace door.Infrastructure.Services
 {
-    public class CameraNotificationService : ICameraNotification
+    public class CameraNotificationService
     {
         private readonly DoorDbContext _context;
         private readonly HttpClient _httpClient;
         private readonly string _webhookUrl;
 
-        public CameraNotificationService(DoorDbContext context, IConfiguration configuration)
+        public CameraNotificationService(DoorDbContext context)
         {
             _context = context;
             _httpClient = new HttpClient();
-            _webhookUrl = configuration["Discord:WebhookUrl"]; // `appsettings.json` から取得
+          
         }
         /// <summary>
         /// DB挿入用
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task DataEntryInsert(DataEntryRequestDto request)
-        {
-            //挿入処理 SQLiteに処理はまかせる
-            DataEntrySQLiteService dataEntrySQLiteService = new DataEntrySQLiteService(_context);
-            await dataEntrySQLiteService.DataEntryInsertAsync(request);
-        }
+        //public async Task DataEntryInsert(DataEntryRequestDto request)
+        //{
+        //    //挿入処理 SQLiteに処理はまかせる
+        //    DataEntrySQLiteService dataEntrySQLiteService = new DataEntrySQLiteService(_context);
+        //    await dataEntrySQLiteService.DataEntryInsertAsync(request);
+        //}
 
         /// <summary>
-        /// discord通知 discord通知を担当
+        /// 受け取ったメッセージをdiscord通知 
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>

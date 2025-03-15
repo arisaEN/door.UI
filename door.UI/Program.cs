@@ -17,7 +17,7 @@ builder.Services.AddRazorComponents()
 
 // Add DbContext and services
 builder.Services.AddDbContext<DoorDbContext>();
-builder.Services.AddScoped<ICameraNotification, CameraNotificationService>();
+//builder.Services.AddScoped<ICameraNotification, CameraNotificationService>();
 
 builder.Services.AddSignalR();
 
