@@ -11,7 +11,6 @@ using door.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using door.Infrastructure.SQLite;
-using door.Domain.Events;
 
 namespace door.Infrastructure.Services
 {

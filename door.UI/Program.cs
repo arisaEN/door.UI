@@ -7,7 +7,7 @@ using door.Domain.Entities;
 using door.Infrastructure;
 using door.Domain.Repositories;
 using door.Infrastructure.Services;
-using door.Domain.Events;
+
 // using Blazored.Toast;
 
 var builder = WebApplication.CreateBuilder(args);
