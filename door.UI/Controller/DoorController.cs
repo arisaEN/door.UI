@@ -23,14 +23,17 @@ namespace door.UI.Controllers
       
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly DoorDbContext _context;
-        private readonly DiscordNotificationService _cameraNotificationService;
+        private readonly DiscordNotificationService _discordNotificationService;
+        private readonly DataEntrySQLiteService _dataEntrySQLiteService;
 
 
 
-        public DoorController(DoorDbContext context, DiscordNotificationService cameraNotificationService)
+        public DoorController(DoorDbContext context, DiscordNotificationService discordNotificationService, DataEntrySQLiteService dataEntrySQLiteService)
         {
             _context = context;
-            _cameraNotificationService = cameraNotificationService;
+            _discordNotificationService = discordNotificationService;
+            _dataEntrySQLiteService = dataEntrySQLiteService;
+
         }
         /// <summary>
         /// DB挿入処理
@@ -45,7 +48,7 @@ namespace door.UI.Controllers
                 return BadRequest("Invalid request");
             //CameraNotificationService層の処理を呼ぶ
             // データをDBに挿入
-            DataEntrySQLiteService _dataEntrySQLiteService = new DataEntrySQLiteService(_context);
+            //DataEntrySQLiteService _dataEntrySQLiteService = new DataEntrySQLiteService(_context);
             await _dataEntrySQLiteService.DataEntryInsertAsync(request);
 
             return Ok(new { message = "Data entry inserted successfully" });
@@ -78,7 +81,7 @@ namespace door.UI.Controllers
             }
 
             // Discord通知を実行            
-            await _cameraNotificationService.HandleDoorStateChange(message.ToString());
+            await _discordNotificationService.HandleDoorStateChange(message.ToString());
 
             return Ok(new { message = "Notification sent successfully" });
         }

@@ -21,6 +21,7 @@ builder.Services.AddDbContext<DoorDbContext>();
 //builder.Services.AddSingleton<IDiscordNotificationService, DiscordNotificationService>();
 builder.Services.AddScoped<IDiscordNotificationService, DiscordNotificationService>();
 builder.Services.AddSingleton<DiscordNotificationService>();
+builder.Services.AddSingleton<DataEntrySQLiteService>();
 
 
 builder.Services.AddSignalR();
