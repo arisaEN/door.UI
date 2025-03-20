@@ -11,7 +11,7 @@ using door.Domain.DTO;
 namespace door.Domain.Repositories
 {
 
-    public interface IDiscordNotificationService
+    public interface INotificationService
     {
         /// <summary>
         /// discord通知

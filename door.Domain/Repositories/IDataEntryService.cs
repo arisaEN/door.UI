@@ -8,7 +8,7 @@ using door.Domain.Entities;
 
 namespace door.Domain.Repositories
 {
-    public interface IDataEntrySQLiteService
+    public interface IDataEntryService
     {
         /// <summary>
         /// door.msからデータ参照用

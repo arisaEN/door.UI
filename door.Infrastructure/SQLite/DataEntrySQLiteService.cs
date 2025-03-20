@@ -14,7 +14,7 @@ using door.Domain.Repositories;
 namespace door.Infrastructure.SQLite
 {
 
-    public class DataEntrySQLiteService: IDataEntrySQLiteService
+    public class DataEntrySQLiteService: IDataEntryService
     {
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly DoorDbContext _context;

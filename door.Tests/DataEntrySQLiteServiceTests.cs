@@ -14,7 +14,7 @@ namespace door.Tests.TestDataEntrySQLiteService
 {
     public class DataEntryServiceTests
     {
-        private IDataEntrySQLiteService _service;
+        private IDataEntryService _service;
         private DoorDbContext _dbContext;
         /// <summary>
         /// コンストラクタでデータを用意
@@ -26,7 +26,7 @@ namespace door.Tests.TestDataEntrySQLiteService
             if (useMock)
             {
                 // Moq で Mock サービスを作成
-                var mockService = new Mock<IDataEntrySQLiteService>();
+                var mockService = new Mock<IDataEntryService>();
 
                 var mockData = new List<DataEntryDTO>
                 {

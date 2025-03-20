@@ -15,7 +15,7 @@ using door.Infrastructure.SQLite;
 
 namespace door.Infrastructure.Services
 {
-    public class DiscordNotificationService : IDiscordNotificationService
+    public class DiscordNotificationService : INotificationService
     {
         private readonly HttpClient _httpClient;
         private readonly string _webhookUrl;

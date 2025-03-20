@@ -8,8 +8,8 @@
 @using door.Infrastructure.SQLite
 @inject DoorDbContext DbContext
 @inject DiscordNotificationService NotificationService
-@inject IDataEntrySQLiteService _dataEntryService
-@inject IDiscordNotificationService _notificationService
+@inject IDataEntryService _dataEntryService
+@inject INotificationService _notificationService
 
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
 

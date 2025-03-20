@@ -15,10 +15,10 @@ namespace door.UI.Controllers
     public class DoorController : ControllerBase
     {
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly IDataEntrySQLiteService _dataEntryService;
-        private readonly IDiscordNotificationService _notificationService;
+        private readonly IDataEntryService _dataEntryService;
+        private readonly INotificationService _notificationService;
 
-        public DoorController(IDataEntrySQLiteService dataEntryService, IDiscordNotificationService notificationService)
+        public DoorController(IDataEntryService dataEntryService, INotificationService notificationService)
         {
             _dataEntryService = dataEntryService;
             _notificationService = notificationService;

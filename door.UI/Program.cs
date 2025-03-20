@@ -21,8 +21,8 @@ builder.Services.AddDbContext<DoorDbContext>();
 builder.Services.AddScoped<DataEntrySQLiteService>();
 
 // インターフェース利用
-builder.Services.AddScoped<IDataEntrySQLiteService, DataEntrySQLiteService>();
-builder.Services.AddScoped<IDiscordNotificationService, DiscordNotificationService>();
+builder.Services.AddScoped<IDataEntryService, DataEntrySQLiteService>();
+builder.Services.AddScoped<INotificationService, DiscordNotificationService>();
 
 
 builder.Services.AddSingleton<DiscordNotificationService>();

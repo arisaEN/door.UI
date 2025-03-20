@@ -42,7 +42,7 @@ namespace door.Tests
 
             var services = new ServiceCollection();
             services.AddSingleton<IConfiguration>(configuration);
-            services.AddScoped<IDiscordNotificationService, DiscordNotificationService>();
+            services.AddScoped<INotificationService, DiscordNotificationService>();
 
             if (httpClient != null)
             {
@@ -80,7 +80,7 @@ namespace door.Tests
             };
 
             var serviceProvider = GetServiceProvider(settings, httpClient);
-            var service = serviceProvider.GetRequiredService<IDiscordNotificationService>();
+            var service = serviceProvider.GetRequiredService<INotificationService>();
 
             if (service is DiscordNotificationService discordService)
             {
@@ -106,7 +106,7 @@ namespace door.Tests
             };
 
             var serviceProvider = GetServiceProvider(settings);
-            var service = serviceProvider.GetRequiredService<IDiscordNotificationService>();
+            var service = serviceProvider.GetRequiredService<INotificationService>();
 
             var exception = await Assert.ThrowsAsync<Exception>(() => service.NotificationStateChange("Test message"));
             Assert.Equal("Webhook URL is not configured.", exception.Message);
@@ -128,7 +128,7 @@ namespace door.Tests
             };
 
             var serviceProvider = GetServiceProvider(settings, httpClient);
-            var service = serviceProvider.GetRequiredService<IDiscordNotificationService>();
+            var service = serviceProvider.GetRequiredService<INotificationService>();
 
             if (service is DiscordNotificationService discordService)
             {
