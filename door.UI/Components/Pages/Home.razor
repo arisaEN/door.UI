@@ -2,11 +2,15 @@
 @using System.Reflection
 @using System.ComponentModel.DataAnnotations
 @using door.Domain.DTO
+@using door.Domain.Repositories
 @using door.Infrastructure
 @using door.Infrastructure.Services
 @using door.Infrastructure.SQLite
 @inject DoorDbContext DbContext
 @inject DiscordNotificationService NotificationService
+@inject IDataEntrySQLiteService _dataEntryService
+@inject IDiscordNotificationService _notificationService
+
 @rendermode @(new InteractiveServerRenderMode(prerender:false))
 
 
@@ -53,8 +57,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        dataEntryService = new DataEntrySQLiteService(DbContext);
-        dataEntries = await dataEntryService.GetDataEntryAsync();
+        dataEntries = await _dataEntryService.GetDataEntryAsync();
 
         if (NotificationService != null)
         {
@@ -70,8 +73,7 @@ else
     {
         if (dataEntryService != null)
         {
-            DataEntrySQLiteService dataEntryService = new DataEntrySQLiteService(DbContext);
-            dataEntries = await dataEntryService.GetDataEntryAsync();
+            dataEntries = await _dataEntryService.GetDataEntryAsync();
         }
     }
 

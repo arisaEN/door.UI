@@ -1,16 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using door.Domain.DTO;
-using door.Domain.Repositories;
-using System;
-using door.Infrastructure.SQLite;
-using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using door.Infrastructure;
-using System.Text;
 using door.Infrastructure.Services;
-using Microsoft.Extensions.Configuration;
-
+using System.Text;
+using NLog;
+using door.Domain.Repositories;
 
 //エンドポイントを提供する
 namespace door.UI.Controllers
@@ -20,25 +14,14 @@ namespace door.UI.Controllers
     
     public class DoorController : ControllerBase
     {
-      
         private static NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly DoorDbContext _context;
-        private readonly DiscordNotificationService _discordNotificationService;
-        private readonly DataEntrySQLiteService _dataEntrySQLiteService;
+        private readonly IDataEntrySQLiteService _dataEntryService;
+        private readonly IDiscordNotificationService _notificationService;
 
-
-
-        //public DoorController(DoorDbContext context, DiscordNotificationService discordNotificationService, DataEntrySQLiteService dataEntrySQLiteService)
-        //{
-        //    _context = context;
-        //    _discordNotificationService = discordNotificationService;
-        //    _dataEntrySQLiteService = dataEntrySQLiteService;
-        //}
-
-        public DoorController(DataEntrySQLiteService dataEntrySQLiteService, DiscordNotificationService discordNotificationService)
+        public DoorController(IDataEntrySQLiteService dataEntryService, IDiscordNotificationService notificationService)
         {
-            _dataEntrySQLiteService = dataEntrySQLiteService;
-            _discordNotificationService = discordNotificationService;
+            _dataEntryService = dataEntryService;
+            _notificationService = notificationService;
         }
 
         /// <summary>
@@ -52,10 +35,8 @@ namespace door.UI.Controllers
             _logger.Info("リクエスト来ました");
             if (request == null)
                 return BadRequest("Invalid request");
-            //CameraNotificationService層の処理を呼ぶ
             // データをDBに挿入
-            //DataEntrySQLiteService _dataEntrySQLiteService = new DataEntrySQLiteService(_context);
-            await _dataEntrySQLiteService.DataEntryInsertAsync(request);
+            await _dataEntryService.DataEntryInsertAsync(request);
 
             return Ok(new { message = "Data entry inserted successfully" });
         }
@@ -72,8 +53,7 @@ namespace door.UI.Controllers
                 return BadRequest("Invalid request");
 
             // データ変換
-            //DataEntrySQLiteService dataEntrySQLiteService = new DataEntrySQLiteService(_context);
-            var dataEntryList = await _dataEntrySQLiteService.DataEntryReqTempJointAsync(request);
+            var dataEntryList = await _dataEntryService.DataEntryReqTempJointAsync(request);
 
             if (dataEntryList == null || !dataEntryList.Any())
                 return NotFound("No matching data found");
@@ -87,8 +67,7 @@ namespace door.UI.Controllers
             }
 
             // Discord通知を実行            
-            //await _discordNotificationService.HandleDoorStateChange(message.ToString());
-            await _discordNotificationService.NotificationStateChange(message.ToString());
+            await _notificationService.NotificationStateChange(message.ToString());
             
             return Ok(new { message = "Notification sent successfully" });
         }

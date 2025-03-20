@@ -19,8 +19,11 @@ builder.Services.AddRazorComponents()
 // Add DbContext and services
 builder.Services.AddDbContext<DoorDbContext>();
 builder.Services.AddScoped<DataEntrySQLiteService>();
-builder.Services.AddSingleton<IDiscordNotificationService, DiscordNotificationService>();
-//builder.Services.AddSingleton<DiscordNotificationService>();
+
+// インターフェース利用
+builder.Services.AddScoped<IDataEntrySQLiteService, DataEntrySQLiteService>();
+builder.Services.AddScoped<IDiscordNotificationService, DiscordNotificationService>();
+
 
 builder.Services.AddSingleton<DiscordNotificationService>();
 
