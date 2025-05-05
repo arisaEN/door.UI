@@ -48,27 +48,24 @@ namespace door.UI.Controllers
         [HttpPost("notification")]
         public async Task<IActionResult> ReqDiscordNotification([FromBody] DataEntryRequestDto request)
         {
-            //CameraNotificationService層の処理を呼ぶ
             if (request == null)
                 return BadRequest("Invalid request");
 
-            // データ変換
             var dataEntryList = await _dataEntryService.DataEntryReqTempJointAsync(request);
 
             if (dataEntryList == null || !dataEntryList.Any())
                 return NotFound("No matching data found");
 
-            // データ編加算されたリストDTOをDiscord通知用に整形
-            var message = new StringBuilder();
-            message.AppendLine("🔔 [テスト通知だお]");
-            foreach (var entry in dataEntryList)
-            {
-                message.AppendLine($"📅 日付: {entry.Date} 🕒 時間: {entry.Time} 🏷 状態: {entry.StatusName}");
-            }
+            var entry = dataEntryList.First(); // 最新データ1件のみで通知
+            var statusEmoji = entry.StatusName.Contains("開") ? "🟢" : "🔴"; // 「開」「閉」で判断（日本語でも対応）
+            var statusLabel = entry.StatusName;
 
-            // Discord通知を実行            
+            var message = new StringBuilder();
+            message.AppendLine($"{statusEmoji} ドアが「{statusLabel}」になりました！");
+            message.AppendLine($"📅 {entry.Date} 🕒 {entry.Time}");
+
             await _notificationService.NotificationStateChange(message.ToString());
-            
+
             return Ok(new { message = "Notification sent successfully" });
         }
     }

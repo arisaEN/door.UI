@@ -1,0 +1,3 @@
+cd /home/pcmainte/project/door.UI
+docker build --no-cache -t door_ui . -f door.UI/Dockerfile
+docker run -v "/home/pcmainte/project/door.UI/door.UI/door.db:/app/door.db" -d -p 7275:7275 --name door_ui_container door_ui
